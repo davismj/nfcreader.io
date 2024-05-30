@@ -51,7 +51,8 @@
 		<h1>NFC Reader</h1>
 		<p class="if-enabled">If NFC is enabled on your device, tap your card to see its contents.</p>
 		<p class="if-disabled error">NFC is not available on your device. Try again on Chrome for Android.</p>
-		<div id="taparea" class="if-enabled"></div>
+		<button id="scan">Scan</button>
+		<pre id="output"></pre>
 		<footer>
 			<p>source code at github</p>
 			<p>created by @majdav_</p>
@@ -59,7 +60,17 @@
 		</footer>
 		<script type="module">
 			import { getData } from './src/lib/nfc';
-			document.addEventListener('DOMContentLoaded', getData);
+
+			const output = document.getElementById('output');
+			const button = document.getElementById('scan');
+			button.addEventListener('click', async () => {
+				try {
+					output.innerText = JSON.stringify(await getData(), null, 2);
+				}
+				catch (err) {
+					alert(err);
+				}
+			});
 		</script>
 	</body>
 </html>
