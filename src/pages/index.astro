@@ -1,0 +1,65 @@
+---
+---
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>NFC Reader</title>
+		<style>
+			body {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				font-family: Arial, Helvetica, sans-serif;
+			}
+
+			h1 {
+				text-align: center;
+			}
+
+			#taparea {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background: grey;
+				height: 50vw;
+				width: 50vw;
+				margin: auto;
+
+				&::after {
+					content: "Tap Here";
+					font-size: 2rem;
+				}
+			}
+
+			.error {
+				font-weight: bold;
+			}
+
+			:root.ndef-disabled .if-enabled {
+				display: none !important;
+			}
+
+			:root:not(.ndef-disabled) .if-disabled {
+				display: none !important;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>NFC Reader</h1>
+		<p class="if-enabled">If NFC is enabled on your device, tap your card to see its contents.</p>
+		<p class="if-disabled error">NFC is not available on your device. Try again on Chrome for Android.</p>
+		<div id="taparea" class="if-enabled"></div>
+		<footer>
+			<p>source code at github</p>
+			<p>created by @majdav_</p>
+			<p>create modern web apps with toa.llc</p>
+		</footer>
+		<script type="module">
+			import { getData } from './src/lib/nfc';
+			document.addEventListener('DOMContentLoaded', getData);
+		</script>
+	</body>
+</html>
