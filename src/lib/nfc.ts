@@ -24,29 +24,28 @@ function expandRecord(parent: NDEFRecord): Record<string, any> {
 					: result[key] = value;
 			}
 		}
-		return result;
+		return { [parent.recordType]: result };
 	} catch {
 		const { recordType, data, encoding } = parent;
 		return { 
-			[recordType]: new TextDecoder(encoding).decode(data)
+			[recordType]: new TextDecoder(encoding ?? 'utf-8').decode(data)
 		};
 	}
 }
 
-export async function getData(signal: AbortSignal): Promise<any> {
-	return await new Promise(async (resolve, reject) => {
+export function getData(signal?: AbortSignal): Promise<any> {
+	return new Promise(async (resolve, reject) => {
 		try {
 			await ndef.scan({ signal });
-			// @ts-ignore
 			ndef.addEventListener('reading', ({ message }) => {
 				resolve(
 					Array.from(message.records)
 						.map(expandRecord)
 						.reduce<Record<string, any>>((obj, expanded) => Object.assign(obj, expanded), {})
-				);
+					);
 			});
-		} catch(error) {
-			reject(error);
+		} catch(err) {
+			reject(err);
 		}
 	});
 }
