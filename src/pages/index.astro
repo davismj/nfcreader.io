@@ -1,24 +1,28 @@
 ---
+import Head from "../partials/head.astro";
+
+const title = "NFC Reader";
+const description = "Read the contents of an NFC tag as JSON in your browser."
+
+const github = "https://github.com/davismj/nfcreader.io";
 ---
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>NFC Reader</title>
+	<Head title={title} description={description}>
 		<style>
 			body {
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
 				font-family: Arial, Helvetica, sans-serif;
+				max-width: 600px;
+				margin: auto;
+				padding: 1rem;
 			}
-
+	
 			h1 {
 				text-align: center;
 			}
-
+	
 			#taparea {
 				display: flex;
 				justify-content: center;
@@ -27,36 +31,36 @@
 				height: 50vw;
 				width: 50vw;
 				margin: auto;
-
+	
 				&::after {
 					content: "Tap Here";
 					font-size: 2rem;
 				}
 			}
-
+	
 			.error {
 				font-weight: bold;
 			}
-
+	
 			:root.ndef-disabled .if-enabled {
 				display: none !important;
 			}
-
+	
 			:root:not(.ndef-disabled) .if-disabled {
 				display: none !important;
 			}
 		</style>
-	</head>
+	</Head>
 	<body>
 		<h1>NFC Reader</h1>
-		<p class="if-enabled">If NFC is enabled on your device, tap your card to see its contents.</p>
+		<p class="if-enabled">Tap your tag to see its contents as JSON</p>
 		<p class="if-disabled error">NFC is not available on your device. Try again on Chrome for Android.</p>
 		<button id="scan">Scan</button>
 		<pre id="output"></pre>
 		<footer>
-			<p>source code at github</p>
-			<p>created by @majdav_</p>
-			<p>create modern web apps with toa.llc</p>
+			<p>source <a href="https://github.com/davismj/nfcreader.io">https://github.com/davismj/nfcreader.io</a></p>
+			<p>created by <a href="https://x.com/majdav_">majdav</a></p>
+			<!-- <p>create modern web apps with toa.llc</p> -->
 		</footer>
 		<script>
 			import { getData } from '../lib/nfc.ts';
@@ -65,10 +69,16 @@
 			const button = document.getElementById('scan');
 			button.addEventListener('click', async () => {
 				try {
+					button.innerText = 'Scanning';
+					button.toggleAttribute('disabled', true);
 					output.innerText = JSON.stringify(await getData(), null, 2);
 				}
 				catch (err) {
 					alert(err);
+				}
+				finally {
+					button.innerText = 'Scan';
+					button.removeAttribute('disabled');
 				}
 			});
 		</script>

@@ -1,6 +1,6 @@
 let ndef: any = null;
 try {
-// @ts-ignore
+	// @ts-ignore
 	ndef = new NDEFReader();
 } catch {
 	document.documentElement.classList.add('ndef-disabled');
